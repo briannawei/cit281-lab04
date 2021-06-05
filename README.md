@@ -1,37 +1,47 @@
-## Welcome to GitHub Pages
+## Lab 4
 
-You can use the [editor on GitHub](https://github.com/briannawei/cit281-lab04/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+# lab-04.js
 ```
+// Require the Fastify framework and instantiate it
+const fastify = require("fastify")();
+// Handle GET verb for / route using Fastify
+// Note use of "chain" dot notation syntax
+fastify.get("/", (request, reply) => {
+  reply
+    .code(200)
+    .header("Content-Type", "text/html; charset=utf-8")
+    .send("<h1>Hello from Lab 4!</h1>");
+});
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+// Route for /name
+fastify.get("/name", (request, reply) => {
+  // (A) Getting information from the requester
+  const {first, last} = request.query;
+  console.log(first, last);
 
-### Jekyll Themes
+  //const name  // if first and last are defined, then name = "Brianna Wei" else "Guest"
+  //<var> = <conditional statement> ? value if cs is true : alt value if cs is false
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/briannawei/cit281-lab04/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+  // (B) Transforming the request into useful information
+  const name = first && last ? `${first} ${last}` : `Guest`;
 
-### Support or Contact
+  // (C) Transforming the request into useful information
+  reply
+    .code(200)
+    .header("Content-Type", "text/html; charset=utf-8")
+    .send(`<h1>Hello, ${name}</h1>`);
+});
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+// Start server and listen to requests using Fastify
+const listenIP = "localhost";
+const listenPort = 8080;
+fastify.listen(listenPort, listenIP, (err, address) => {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+  console.log(`Server listening on ${address}`);
+});
+
+```
